@@ -53,13 +53,31 @@ public class DownloadDataService extends Service {
 
         Cursor cursor = mResolver.query(RssFeedProvider.CONTENT_URI, null, null, null, "NewsID DESC");
         //To check whether the item is already placed in the Database
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            int maxid = Integer.parseInt(cursor.getString(1));
-            Log.d("Compare" + maxid, "");
-            for (NewsItem item : itemsList) {
-                int newid = Integer.parseInt(item.getmItemId());
-                if (maxid < newid) {
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                int maxid = Integer.parseInt(cursor.getString(1));
+                Log.d("Compare" + maxid, "");
+                for (NewsItem item : itemsList) {
+                    int newid = Integer.parseInt(item.getmItemId());
+                    if (maxid < newid) {
+                        ContentValues values = new ContentValues();
+                        values.put(RssFeedProvider.ITEM_ID, item.getmItemId());
+                        values.put(RssFeedProvider.HEADLINE, item.getmHeadline());
+                        values.put(RssFeedProvider.AUTHOR, item.getmAuthor());
+                        values.put(RssFeedProvider.DATE, item.getmDate());
+                        values.put(RssFeedProvider.CAPTION, item.getmCaption());
+                        values.put(RssFeedProvider.LINK, item.getmLink());
+                        values.put(RssFeedProvider.PHOTO, item.getmPhoto());
+                        values.put(RssFeedProvider.THUMB, item.getmThumbImage());
+                        values.put(RssFeedProvider.STORY, item.getmStory());
+                        getContentResolver().insert(RssFeedProvider.CONTENT_URI, values);
+                    }
+                    Log.d("Compare" + maxid, "" + newid);
+                }
+                itemsList.clear();
+            } else {
+                for (NewsItem item : itemsList) {
                     ContentValues values = new ContentValues();
                     values.put(RssFeedProvider.ITEM_ID, item.getmItemId());
                     values.put(RssFeedProvider.HEADLINE, item.getmHeadline());
@@ -71,29 +89,12 @@ public class DownloadDataService extends Service {
                     values.put(RssFeedProvider.THUMB, item.getmThumbImage());
                     values.put(RssFeedProvider.STORY, item.getmStory());
                     getContentResolver().insert(RssFeedProvider.CONTENT_URI, values);
-                }
-                Log.d("Compare" + maxid, "" + newid);
-            }
-            itemsList.clear();
-        } else {
-            for (NewsItem item : itemsList) {
-                ContentValues values = new ContentValues();
-                values.put(RssFeedProvider.ITEM_ID, item.getmItemId());
-                values.put(RssFeedProvider.HEADLINE, item.getmHeadline());
-                values.put(RssFeedProvider.AUTHOR, item.getmAuthor());
-                values.put(RssFeedProvider.DATE, item.getmDate());
-                values.put(RssFeedProvider.CAPTION, item.getmCaption());
-                values.put(RssFeedProvider.LINK, item.getmLink());
-                values.put(RssFeedProvider.PHOTO, item.getmPhoto());
-                values.put(RssFeedProvider.THUMB, item.getmThumbImage());
-                values.put(RssFeedProvider.STORY, item.getmStory());
-                getContentResolver().insert(RssFeedProvider.CONTENT_URI, values);
 
+                }
+                itemsList.clear();
             }
-            itemsList.clear();
         }
     }
-
     /**
      * Asynch Task to Download Data in the Background
      */

@@ -3,6 +3,7 @@ package downloaddata.com.feeds.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class FeedsCustomAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         ViewHolder holder = new ViewHolder();
-        if (cursor.getString(cursor.getColumnIndex("Photo")) == null) {
+        if (cursor.getString(cursor.getColumnIndex("PHOTO")) == null) {
             View view = mLayoutInflater.inflate(R.layout.news_list_item, parent, false);
             holder.HeadLinetv = (TextView) view.findViewById(R.id.HeadLine_textView);
             holder.Keywordstv = (TextView) view.findViewById(R.id.Keywords_textView);
@@ -53,7 +54,8 @@ public class FeedsCustomAdapter extends CursorAdapter {
 
 
     private int getItemViewType(Cursor cursor) {
-        String Photo = cursor.getString(cursor.getColumnIndex("Photo"));
+        Log.d("Cursor", "" + cursor.getCount());
+        String Photo = cursor.getString(cursor.getColumnIndex("PHOTO"));
         if (Photo != null) {
             return 0;
         } else {
@@ -78,14 +80,14 @@ public class FeedsCustomAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
         int type = getItemViewType(cursor);
         holder.HeadLinetv.setText(cursor.getString(cursor.getColumnIndex("HeadLines")));
-        holder.Keywordstv.setText(cursor.getString(cursor.getColumnIndex("Caption")));
-        holder.Datetv.setText(cursor.getString(cursor.getColumnIndex("Date")));
-        holder.LinkTv.setText(cursor.getString(cursor.getColumnIndex("Link")));
+        holder.Keywordstv.setText(cursor.getString(cursor.getColumnIndex("CAPTION")));
+        holder.Datetv.setText(cursor.getString(cursor.getColumnIndex("DATE")));
+        holder.LinkTv.setText(cursor.getString(cursor.getColumnIndex("LINK")));
         mBitMapWorkerTask= new BitMapWorkerTask(context,holder.PhotoIv);
         if (type == 0) {
-            final Bitmap bm = mBitMapWorkerTask.getBitmapFromMemCache(cursor.getString(cursor.getColumnIndex("Photo")));
+            final Bitmap bm = mBitMapWorkerTask.getBitmapFromMemCache(cursor.getString(cursor.getColumnIndex("PHOTO")));
             if (bm == null) {
-                mBitMapWorkerTask.loadBitmap(context, cursor.getString(cursor.getColumnIndex("Photo")), holder.PhotoIv);
+                mBitMapWorkerTask.loadBitmap(context, cursor.getString(cursor.getColumnIndex("PHOTO")), holder.PhotoIv);
             }
             else
             {

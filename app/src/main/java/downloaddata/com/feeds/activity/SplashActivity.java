@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import downloaddata.com.feeds.R;
+import downloaddata.com.feeds.service.DownloadDataService;
 
 /**
  * Class to show a splash Screen on App Startup
@@ -30,10 +31,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        Intent intent = new Intent();
-        intent.setAction("com.action.download");
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES );
-        sendBroadcast(intent);
+        Intent intent = new Intent(this, DownloadDataService.class);
+        startService(intent);
         //getContentResolver().notifyChange(FeedsListActivity.CONTENT_URI, null, false);
 
         new Handler().postDelayed(new Runnable() {

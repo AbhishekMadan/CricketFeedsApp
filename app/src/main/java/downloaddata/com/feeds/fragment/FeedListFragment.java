@@ -83,14 +83,11 @@ public class FeedListFragment extends Fragment implements LoaderManager.LoaderCa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mCursor = (Cursor) parent.getItemAtPosition(position);
-                String Link = mCursor.getString(mCursor.getColumnIndex("Link"));
+                String Link = mCursor.getString(mCursor.getColumnIndex("LINK"));
                 String HeadLine = mCursor.getString(mCursor.getColumnIndex("HeadLines"));
                 String Story = mCursor.getString(mCursor.getColumnIndex("Story"));
                 String Photo = mCursor.getString(mCursor.getColumnIndex("PHOTO"));
-                /*Intent webView = new Intent(FeedsListActivity.this, WebViewActivity.class);
-                webView.putExtra("Link", Link);
-                webView.putExtra("HeadLines", HeadLine);
-                startActivity(webView);*/
+
                 NewsItem item = new NewsItem();
                 item.setmStory(Story);
                 item.setmHeadline(HeadLine);
@@ -128,7 +125,10 @@ public class FeedListFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader loader, Cursor cursor) {
-        cursor.moveToFirst();
+
+        if(cursor!=null) {
+            cursor.moveToFirst();
+        }
        /* mProgressDialog.dismiss();*/
         mAdapter = new FeedsCustomAdapter(getActivity(), cursor, 0);
         mFeedsListView.setAdapter(mAdapter);
